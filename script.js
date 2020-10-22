@@ -102,10 +102,17 @@ function loaderCB(l01, r01){
       // ORIGINAL BELOW
       // gsap.to(colorBunny, { x: 250, duration: time, onComplete: createNewBunny});    
   }
+  app.stage.interactive = true;
+  app.stage.hitArea = new PIXI.Rectangle(0, 0, 500, 350);
+  app.stage.on('click', onClick);
 
-  app.stage.on('pointerdown', onClick);
-  function onClick() {
-    basicText.text = "asbc";
+  bunny3.interactive = true;
+  bunny3.on('click', onClick);
+  function onClick(xx) 
+  {
+    console.log("called");
+    basicText.text = `${xx.data.global.x} ${xx.data.global.y}`;
+
   }
   app.start();
 
