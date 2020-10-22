@@ -110,9 +110,7 @@ function loaderCB(l01, r01){
   bunny3.on('click', onClick);
   function onClick(xx) 
   {
-    console.log("called");
     basicText.text = `${xx.data.global.x} ${xx.data.global.y}`;
-
   }
   app.start();
 
