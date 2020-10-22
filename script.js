@@ -20,6 +20,12 @@ function loaderCB(l01, r01){
   // time animation in seconds
   const time = 2.0;
 
+  const basicText = new PIXI.Text('Basic text in pixi');
+  basicText.x = 10;
+  basicText.y = 10;
+
+  app.stage.addChild(basicText);
+
   // const bunny1 = new PIXI.Sprite(texture);
   const bunny1 = new PIXI.Sprite(r01.bunny.texture);
   app.stage.addChild(bunny1);
@@ -95,7 +101,13 @@ function loaderCB(l01, r01){
       gsap.to(colorBunny, { x: 100 + (Math.random() * 150), duration: time, onComplete: createNewBunny, repeat: 1, yoyo: true, ease: Power1.easeOut});
       // ORIGINAL BELOW
       // gsap.to(colorBunny, { x: 250, duration: time, onComplete: createNewBunny});    
-      app.start();
   }
+
+  app.stage.on('pointerdown', onClick);
+  function onClick() {
+    basicText.text = "asbc";
+  }
+  app.start();
+
 }
 
