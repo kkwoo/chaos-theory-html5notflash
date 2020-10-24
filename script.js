@@ -53,26 +53,45 @@ function loaderCB(l01, r01){
 
   const graphics = new PIXI.Graphics();
   // Circle
-  graphics.beginFill(0xDE3249);
-  graphics.drawCircle(0, 0, 200, 200);
+  graphics.beginFill(0xDE3250);
+  graphics.drawCircle(0, 0, 200);
   graphics.endFill();
   // https://pixijs.io/examples/#/graphics/simple.js
   // https://stackoverflow.com/questions/50940737/how-to-convert-a-graphic-to-a-sprite-in-pixijs
   // const shape = new PIXI.Sprite(app.renderer.generateTexture(graphics));
-  const shape = graphics;
-  shape.scale = 0.01;
-  shape.x = 100;
-  shape.y = 100;
-
-  app.stage.addChild(shape);
-  gsap.to(shape.scale, {
+  const ct = app.renderer.generateTexture(graphics);
+  const cs01 = new PIXI.Sprite(ct);
+  graphics.scale = 0.01;
+  graphics.x = 100;
+  graphics.y = 100;
+  app.stage.addChild(graphics);
+  
+  gsap.to(graphics.scale, {
       x: 0.2, y: 0.2, duration: time+0.7, repeat: -1, yoyo: true,
   });
+  
+  
+  const newBall2 = new PIXI.Graphics();
+  // Circle
+  newBall2.beginFill(0xDE3249);
+  newBall2.drawCircle(0, 0, 200);
+  newBall2.endFill();
+  
+  // const  newBall2 = new PIXI.Sprite(ct);
+
+  newBall2.scale = 100;
+  newBall2.x = 300;
+  newBall2.y = 300;
+
+  app.stage.addChild(newBall2);
+  gsap.to(newBall2.scale, {
+        x: 0.2, y: 0.2, duration: time+0.7, repeat: -1, yoyo: true,
+    });
+
   // make it look like the circle is expanding on the spot
   /* gsap.to(shape, {
       x: 75, y: 75, duration: time, repeat: -1, yoyo: true,
   }); */
-
 
   const bunny4 = new PIXI.Sprite(r01.bunny.texture);
   bunny4.y = 175;
@@ -106,13 +125,26 @@ function loaderCB(l01, r01){
   app.stage.hitArea = new PIXI.Rectangle(0, 0, 500, 350);
   app.stage.on('click', onClick);
 
-  bunny3.interactive = true;
-  bunny3.on('click', onClick);
+  // bunny3.interactive = true;
+  // bunny3.on('click', onClick);
   function onClick(xx) 
   {
     basicText.text = `${xx.data.global.x} ${xx.data.global.y}`;
+    const newBall = new PIXI.Graphics();
+    // Circle
+    newBall.beginFill(0xDE3249);
+    newBall.drawCircle(0, 0, 200);
+    newBall.endFill();
+
+    newBall.scale = 1;
+    newBall.x = xx.data.global.x;
+    newBall.y = xx.data.global.y;
+
+    app.stage.addChild(newBall);
+    gsap.to(newBall.scale, {
+      x: 0.2, y: 0.2, duration: time+0.7, repeat: -1, yoyo: true,
+  });
   }
   app.start();
-
 }
 
