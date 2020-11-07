@@ -1,3 +1,6 @@
+// Note: In this example we have two "requestAnimationFrame", PIXI + gsap.
+// gsap coordinate his animations (bunnies).
+
 const app = new PIXI.Application({
     width: 500,
     height: 400,
@@ -8,24 +11,29 @@ const app = new PIXI.Application({
 document.body.appendChild(app.view);
 app.stop();
 
+
 // time animation in seconds
 const time = 2.0;
+
+/******* const basicText = new PIXI.Text('Basic text in pixi');
+basicText.x = 10;
+basicText.y = 10;
+app.stage.addChild(basicText);
+
+const circleText = new PIXI.Text('Basic text in pixi');
+circleText.x = 10;
+circleText.y = 50;
+app.stage.addChild(circleText); *******/
 
 const explText = new PIXI.Text('Score: 0');
 explText.x = 10;
 explText.y = 10;
 app.stage.addChild(explText);
 
-const clickCtText = new PIXI.Text('Clicks: 0');
+const clickCtText = new PIXI.Text('Click Count: 0');
 clickCtText.x = 10;
 clickCtText.y = 50;
 app.stage.addChild(clickCtText);
-
-const deltaText = new PIXI.Text('Delta: 0');
-deltaText.x = 10;
-deltaText.y = 90;
-app.stage.addChild(deltaText);
-
 function ClickUpdateFactory () {
   let count = 0;
   function add() {
@@ -45,6 +53,7 @@ app.stage.on('pointertap', cu.add);
 
 function addExplosion(xx) 
 {
+  //DEBUG basicText.text = `${xx.data.global.x} ${xx.data.global.y}`;
   const newBall = new PIXI.Graphics();
   // Circle
   newBall.beginFill(0xDE3249);
@@ -57,29 +66,40 @@ function addExplosion(xx)
   // PIXI.GRAPHICS_CURVES.adaptive = false
   newBall.scale = "silly var: small please";
 
+  //DEBUG console.log(`newBall.scale = ${newBall.scale}`);
   newBall.x = xx.data.global.x;
   newBall.y = xx.data.global.y;
 
   app.stage.addChild(newBall);
+  // CSSPlugin
+  /*
+  gsap.to(newBall.scale, {
+    x: 0.2, y: 0.2, duration: time+0.7, repeat: -1, yoyo: true,
+  });
+  */
 
   // PIXIPlugin: second parameter is for time of animation in seconds
   // TODO oncomplete make invisible after explosion
   gsap.to(newBall, {pixi:{
-    scale:0.2},
+    scale:0.2,
+//       scaleY:20,
+      // skewX:30,
+        rotation:60},
     repeat: 1,
     yoyo: true,
     duration: time+0.7,
     onStart: function () {
       explosions.add(newBall);
+      //DEBUG circleText.text = "asd";
     },
     onComplete: function () {
+      //DEBUG circleText.text = "finished";
       explosions.delete(newBall);
     }
   });
 
 }
 
-// code pinched from stackoverflow
 function KFYshuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -142,13 +162,22 @@ for (c = 0; c < 50; c++) {
 }
 KFYshuffle(balls50);
 app.start();
-
+// TODO: get the balls to launch not all at once
+// for (c=0;c<50;c++){balls50[c].sendUp();}
+// for (x of balls50) {x.sendUp()}
+// with gsap timeline:
+// var t1 = gsap.timeline() 
+// t1.to(balls50[0].cBall, balls50[0].sendUpVar(), 0) 
+// t1.to(balls50[1].cBall, balls50[1].sendUpVar(), 0.5)
+// t1.seek(0)
 let t1 = gsap.timeline(); 
 for (c = 0; c < 50; c++){
   t1.to(balls50[c].cBall, balls50[c].sendUpVar(), c/2);
 }
+t1.to(explText, {duration: 1, text: `Score: ${balls50.filter(x => {return x.cBall.visible}).length}`, ease: "none"}, 26);
 
-// code pinched from spicyoghurt
+// TODO: convert object to using object literal for parameters instead of positional parameters
+// ORIGINAL function circleIntersect(x1, y1, r1, x2, y2, r2)
 function circleIntersect(spec) {
 
     // destructure / extract relevant parameters from object literal parameter
@@ -163,10 +192,16 @@ function circleIntersect(spec) {
 }
 
 app.ticker.add((delta) => {
+    // collision detection here I think
+    // refer to https://spicyyoghurt.com/tutorials/html5-javascript-game-development/collision-detection-physics
+    // rotate the container!
+    // use delta to create frame-independent transform
+    // container.rotation -= 0.01 * delta;
+    //DEBUG basicText.text = `${explosions.size}: ${delta}`;
+    //DEBUG explText.text = '';
     for (ex of explosions) {
-      // curious about delta on old laptop
-      deltaText.text = `Delta: ${delta}`
-      // refresh scoreboard
+      //DEBUG explText.text += `${ex.scale.x}, ${ex.scale.y}\n`;
+      //DEBUG explText.text += `${ex.width}, ${ex.height}\n`;
       explText.text = `Score: ${balls50.filter(x => {return !x.cBall.visible}).length}`
       // check if explosion established
       // contact with any in-flight unlit balls
@@ -190,5 +225,13 @@ app.ticker.add((delta) => {
             });
         }
       }
+      // if explosion established
+      // do something anything
+      // eg make contacted ball change attribute
+      // end-goal is create a new explosion
     }
+
+    // 2 OPTIONS
+    // - loop through balls50 first
+    // - loop through explosions first
 });
