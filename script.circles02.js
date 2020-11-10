@@ -1,7 +1,8 @@
 const app = new PIXI.Application({
     width: 500,
     height: 400,
-    backgroundColor: 0x1099bb,
+    // backgroundColor: 0x1099bb,
+    backgroundColor: 0x000000,
     antialias: true
 });
 
@@ -11,20 +12,24 @@ app.stop();
 // time animation in seconds
 const time = 2.0;
 
+// initial launch floor
+const launch = 405;
 const explText = new PIXI.Text('Score: 0');
 explText.x = 10;
 explText.y = 10;
+explText.style.fill = 0x00FF00;
 app.stage.addChild(explText);
 
 const clickCtText = new PIXI.Text('Clicks: 0');
 clickCtText.x = 10;
 clickCtText.y = 50;
+clickCtText.style.fill = 0x00FF00;
 app.stage.addChild(clickCtText);
 
 const deltaText = new PIXI.Text('Delta: 0');
 deltaText.x = 10;
 deltaText.y = 90;
-app.stage.addChild(deltaText);
+// app.stage.addChild(deltaText);
 
 function ClickUpdateFactory () {
   let count = 0;
@@ -68,7 +73,7 @@ function addExplosion(xx)
     scale:0.2},
     repeat: 1,
     yoyo: true,
-    duration: time+0.7,
+    duration: time,
     onStart: function () {
       explosions.add(newBall);
     },
@@ -108,25 +113,24 @@ function Bfactory() {
   let ry = 100 + 100*Math.random();
 
   let cBall = new PIXI.Graphics();
-  cBall.beginFill(0xDE3250);
+  // cBall.beginFill(0xDE3250);
+  cBall.beginFill(0x1099bb);
   cBall.drawCircle(0, 0, 5);
   cBall.endFill();
   cBall.x = rx;
   // 380 for visibility
   // cBall.y = 380;
   // 520 means we can't see the balls first
-  cBall.y = 520;
+  cBall.y = launch;
   
   app.stage.addChild(cBall);
 
   function sendUp() {
-    gsap.to(cBall, {
-      y: ry, duration: time+0.7, repeat: 1, yoyo: true
-    })
+    gsap.to(cBall, sendUpVar())
   }
   function sendUpVar() {
     return({
-      y: ry, duration: time+0.7, repeat: 1, yoyo: true
+      y: ry, duration: time, repeat: 1, yoyo: true
     })
   }
 
@@ -165,12 +169,12 @@ function circleIntersect(spec) {
 app.ticker.add((delta) => {
     for (ex of explosions) {
       // curious about delta on old laptop
-      deltaText.text = `Delta: ${delta}`
+      // deltaText.text = `Delta: ${delta}`
       // refresh scoreboard
       explText.text = `Score: ${balls50.filter(x => {return !x.cBall.visible}).length}`
       // check if explosion established
       // contact with any in-flight unlit balls
-      for (ball of balls50.filter(x => {return ((x.cBall.visible) && (x.cBall.y !== 520));})) {
+      for (ball of balls50.filter(x => {return ((x.cBall.visible) && (x.cBall.y !== launch));})) {
         if (circleIntersect({
           x1: ex.position.x,
           y1: ex.position.y,
