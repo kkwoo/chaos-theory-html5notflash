@@ -1,1 +1,0 @@
-prevent Jack from breaking code with accidental typing
