@@ -1,6 +1,8 @@
+const gheight = 400;
+const gwidth = 500;
 const app = new PIXI.Application({
-    width: 500,
-    height: 400,
+    width: gwidth,
+    height: gheight,
     // backgroundColor: 0x1099bb,
     backgroundColor: 0x000000,
     antialias: true
@@ -13,7 +15,7 @@ app.stop();
 const time = 2.0;
 
 // initial launch floor
-const launch = 405;
+const launch = gheight + 5;
 const explText = new PIXI.Text('Score: 0');
 explText.x = 10;
 explText.y = 10;
@@ -44,7 +46,7 @@ const cu = ClickUpdateFactory();
 let explosions = new Set();
 
 app.stage.interactive = true;
-app.stage.hitArea = new PIXI.Rectangle(0, 0, 500, 350);
+app.stage.hitArea = new PIXI.Rectangle(0, 0, gwidth, gheight);
 app.stage.on('pointertap', addExplosion);
 app.stage.on('pointertap', cu.add);
 
