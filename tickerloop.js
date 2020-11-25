@@ -32,7 +32,7 @@ game.app.ticker.add((delta) => {
     }
   }
 
-  if (!game.inProgress()) {
+  if (gamestage.container.interactive && !game.inProgress()) {
     gamestage.container.interactive = false;
   }
 });
