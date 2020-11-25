@@ -26,8 +26,11 @@ let game = (function() {
     }
     function ctdebug() {
       return count;
-    }  
-    return Object.freeze({add, count, ctdebug});
+    }
+    function reset() {
+      count = 0;
+    }
+    return Object.freeze({add, count, ctdebug, reset});
   }());
 
 
@@ -45,10 +48,15 @@ let game = (function() {
     return t1.isActive();
   }
 
+  function finished() {
+    return t1.isActive();
+  }
+
   // setup game
   function initialise() {
     balls50 = [];
-    t1.clear(); 
+    t1.clear();
+    cu.reset(); 
 
     for (let c = 0; c < 50; c++) {
       let cBall = Bfactory();
