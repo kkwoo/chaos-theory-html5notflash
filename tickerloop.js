@@ -34,6 +34,7 @@ game.app.ticker.add((delta) => {
 
   if (gamestage.container.interactive && !game.inProgress()) {
     gamestage.container.interactive = false;
+    gamestage.enableEndOfGameLinks();
   }
 });
 

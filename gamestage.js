@@ -27,12 +27,39 @@ let gamestage = (function(){
     // initiate game state
   });
 
+  const restart = new PIXI.Text('Restart');
+  restart.x = 10;
+  restart.y = 140;
+  restart.style.fill = 0x00FF00;
+  restart.interactive = true;
+  restart.on('pointertap', () => {
+    // doesn't quite work because
+    // - cleanup not correct
+    // - conflicts with hitarea
+    container.removeChildren();
+    container.addChild(clicks);
+    container.addChild(score);
+
+    clicks.text = 'Clicks: 0';
+    score.text = 'Score: 0';
+    game.startNewGame();
+  });
 
   container.addChild(score);
   container.addChild(clicks);
-  container.addChild(mmreturn);
+  
+  
+  function enableEndOfGameLinks() {
+    container.addChild(mmreturn);
+    container.addChild(restart);
+  } 
+
+  function notCalled() {
+    console.log('notCalled');
+  }
+  
   // don't show on load
   container.visible = false;
 
-  return Object.freeze({container, score, clicks});
+  return Object.freeze({container, score, clicks, restart, enableEndOfGameLinks, notCalled});
 }());

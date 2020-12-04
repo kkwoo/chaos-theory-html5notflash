@@ -26,8 +26,9 @@ let mainmenu = (function(){
     // works as expected, useful for later
     container.visible = false;
     gamestage.container.visible = true;
-    game.initialise();
-    game.launch50();
+    /* game.initialise();
+    game.launch50(); */
+    game.startNewGame();
   });
 
   container.addChild(title);

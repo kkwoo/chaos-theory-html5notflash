@@ -60,6 +60,7 @@ let game = (function() {
 
     for (let c = 0; c < 50; c++) {
       let cBall = Bfactory();
+      // change this to gamestage, away from app.stage
       app.stage.addChild(cBall.cBall);
       balls50.push(cBall);
     }
@@ -75,10 +76,15 @@ let game = (function() {
     }
   }
 
+  function startNewGame() {
+    initialise();
+    launch50();
+
+  }
   function b50debug() {
     return balls50;
   }
 
   console.log("game object: end");
-  return Object.freeze({app, width, height, inProgress, initialise, launch50, launch, time, explosions, balls50, b50debug, cu});
+  return Object.freeze({app, width, height, inProgress, initialise, launch50, launch, time, explosions, balls50, b50debug, cu, startNewGame});
 }());
